@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "title": "Juan",
+    "description": "Perez",
+    "code": "001",
+    "price": 50,
+    "stock": "20",
+    "category": "Nueces",
+    "thumbnails": "htttp:##asdasd.cl",
+    "status": true
+  },
+  {
+    "id": 2,
+    "title": "Carlos",
+    "description": "Gallegos",
+    "code": "002",
+    "price": 100,
+    "stock": "20",
+    "category": "Almendras",
+    "thumbnails": "htttp:##asdasd.cl",
+    "status": true
+  },
+  {
+    "id": 3,
+    "title": "Fernanda",
+    "description": "Eglinton",
+    "code": "003",
+    "price": 100,
+    "stock": "20",
+    "category": "Sopas",
+    "thumbnails": "htttp:##asdasd.cl",
+    "status": true
+  }
+]
