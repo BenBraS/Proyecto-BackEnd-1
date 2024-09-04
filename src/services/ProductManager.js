@@ -37,31 +37,60 @@ getProductById(id){
     return this.products.find(product => product.id === id)
 }
 
-addProduct(product){
-    const newProduct = {
-        id: this.products.length ? this.products[this.products.length - 1].id + 1 : 1,
-        ...product,
-        status: true
-    }
-    this.products.push(newProduct)
-    this.saveToFile()
-    return newProduct;
-}
+addProduct(product) {
+        // Verifica si el producto ya existe por su código
+        const existingProduct = this.products.find(p => p.code === product.code);
+        if (existingProduct) {
+            // Si existe, suma el stock
+            existingProduct.stock += product.stock;
+            this.saveToFile();
+            return existingProduct;
+        }
 
-updateProduct(id, updatedFiles){
-    const productIndex = this.products.findIndex(product => product.id === id)
-    if(productIndex === -1) return null;
-    
-    const updateProduct = {
+        // Si no existe, crea un nuevo producto
+        const newProduct = {
+            id: this.products.length ? this.products[this.products.length - 1].id + 1 : 1,
+            ...product,
+            status: true
+        };
+        this.products.push(newProduct);
+        this.saveToFile();
+        return newProduct;
+    }
+
+async updateProduct(id, updatedFields) {
+    const productIndex = this.products.findIndex(product => product.id === id);
+    if (productIndex === -1) return null;
+
+    // Verificar si 'stock' está presente en los campos actualizados
+    if ('stock' in updatedFields) {
+        let currentStock = this.products[productIndex].stock;
+        let adjustment = Number(updatedFields.stock); // Convertir a número
+
+        // Calcular el nuevo stock
+        let newStock = currentStock + adjustment;
+        console.log(`Current stock: ${currentStock}, Adjustment: ${adjustment}, New stock: ${newStock}`);
+
+        // Si el stock resultante es negativo, ajustarlo a 0 y establecer el estado en false
+        if (newStock < 0) {
+            updatedFields.stock = 0;
+            updatedFields.status = false;
+        } else {
+            updatedFields.stock = newStock;
+            updatedFields.status = newStock > 0;
+        }
+    }
+
+    const updatedProduct = {
         ...this.products[productIndex],
-        ...updatedFiles,
-        id: this.products[productIndex].id //asegura que el id no se actualice
-    }
-    this.products[productIndex]= updateProduct
-    this.saveToFile()
-    return updateProduct
-}
+        ...updatedFields,
+        id: this.products[productIndex].id // Asegurar que el ID no se actualice
+    };
 
+    this.products[productIndex] = updatedProduct;
+    await this.saveToFile(); // Guardar los cambios en el archivo
+    return updatedProduct;
+}
 deleteProduct(id){
     const productIndex = this.products.findIndex(product => product.id === id)
  if(productIndex === -1) return null

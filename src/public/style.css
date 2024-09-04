@@ -1,0 +1,101 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    /* Espacio debajo de la tabla */
+    margin-bottom: 20px; 
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    /* Alineación vertical */
+    vertical-align: middle; 
+}
+
+th {
+    background-color: #f2f2f2;
+    color: #555;
+    font-weight: bold;
+}
+/* Color de fondo alternado para filas */
+tbody tr:nth-child(odd) {
+    background-color: #f9f9f9; 
+}
+/* Color de fondo al pasar el cursor */
+tbody tr:hover {
+    background-color: #e0e0e0; 
+  
+}
+/* Hacer que el formulario ocupe todo el ancho disponible */
+form table {
+    margin: 0;
+    width: 100%; 
+}
+
+form td {
+    padding: 10px;
+}
+
+form input, form select {
+    /* Ajustar el ancho para incluir el padding */
+    width: calc(100% - 16px); 
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    /* Bordes redondeados en inputs y selects */
+    border-radius: 4px; 
+}
+
+button {
+    padding: 10px 20px;
+    /* Fondo azul */
+    background-color: #007BFF; 
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-right: 10px; /* Espaciado entre botones */
+    margin-bottom: 10px; /* Espacio debajo de los botones */
+    transition: background-color 0.3s, transform 0.2s; /* Transición suave para el cambio de color y escalado */
+}
+
+button:hover {
+    background-color: #0056b3; /* Azul más oscuro al pasar el cursor */
+    transform: scale(1.05); /* Escalado ligero al pasar el cursor */
+}
+
+button:active {
+    background-color: #004494; /* Azul aún más oscuro al hacer clic */
+    transform: scale(1); /* Volver al tamaño original al hacer clic */
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px; /* Espacio entre botones */
+}
