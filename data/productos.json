@@ -163,16 +163,5 @@
     "category": "nuecesysemillas",
     "thumbnails": "https://img.freepik.com/foto-gratis/composicion-hacer-pastel-calabaza_23-2149055420.jpg?t=st=1715817587~exp=1715821187~hmac=b86e0d5cbfe81dfb6b3ce0e4e1a3621536afe40be8190cedcaceb4ebd6519d7d&w=1380",
     "status": true
-  },
-  {
-    "id": 16,
-    "title": "15",
-    "description": "asd",
-    "price": "23",
-    "code": "016",
-    "stock": 5,
-    "category": "frutossecos",
-    "thumbnail": "",
-    "status": true
   }
 ]

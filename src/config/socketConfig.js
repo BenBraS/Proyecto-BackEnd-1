@@ -1,16 +1,11 @@
-// socket.js
 import { Server } from 'socket.io';
 import ProductManager from '../services/ProductManager.js';
 
-// Instancia de ProductManager
 const productManager = new ProductManager();
 
-let socketServer;
+export default function socketConfig(httpServer) {
+  const socketServer = new Server(httpServer);
 
-export default function configureSocket(httpServer) {
-  if (socketServer) return socketServer; // Devuelve la instancia existente
-
-  socketServer = new Server(httpServer);
   socketServer.on('connection', async (socket) => {
     console.log('Nuevo cliente conectado');
 
@@ -18,6 +13,7 @@ export default function configureSocket(httpServer) {
     const products = await productManager.getAllProducts();
     socket.emit('updateProducts', { products, message: '' });
 
+    // Evento de Producto Añadido
     socket.on('productAdded', async (product) => {
       try {
         await productManager.addProduct(product);
@@ -28,6 +24,7 @@ export default function configureSocket(httpServer) {
       }
     });
 
+    // Evento de Producto Eliminado
     socket.on('productDeleted', async (productId) => {
       try {
         await productManager.deleteProduct(productId);
@@ -38,7 +35,4 @@ export default function configureSocket(httpServer) {
       }
     });
   });
-
-  return socketServer;
 }
-

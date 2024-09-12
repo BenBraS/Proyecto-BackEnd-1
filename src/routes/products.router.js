@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import ProductManager from '../services/ProductManager.js';
-import socketServer  from '../WebSocket/socket.js'; // Importar el socketServer
+import socketServer from '../config/socketConfig.js';
+
 
 const router = Router();
 const productManager = new ProductManager();
