@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import ProductManager from '../services/ProductManager.js';
-import { socketServer } from '../app.js'; // Importar el socketServer
+import socketServer  from '../WebSocket/socket.js'; // Importar el socketServer
 
 const router = Router();
 const productManager = new ProductManager();
@@ -33,7 +33,6 @@ router.get('/:pid', async (req, res) => {
     }
 });
 
-// POST
 
 // POST
 router.post('/', async (req, res) => {

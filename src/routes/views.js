@@ -15,9 +15,11 @@ router.get('/', async (req, res) => {
     }
 });
 
+// Ruta para la vista "realTimeProducts"
+router.get('/realtimeproducts', async (req, res) => {
+    const products = await p.getAllProducts();
+    res.render('realTimeProducts', { products });
+});
+
+
 export default router;
-// Ruta para la vista "home"
-//app.get('/', async (req, res) => {
-//    const products = await productManager.getAllProducts(); // Corregido
-//    res.render('home', { products });
-//});

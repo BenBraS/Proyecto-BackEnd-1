@@ -166,24 +166,13 @@
   },
   {
     "id": 16,
-    "title": "producto nuevp",
-    "description": "esto es un nuevo producto",
-    "price": "1500",
+    "title": "15",
+    "description": "asd",
+    "price": "23",
     "code": "016",
-    "stock": 0,
-    "category": "legumbresseca",
-    "thumbnail": "",
-    "status": true
-  },
-  {
-    "id": 17,
-    "title": "otromas",
-    "description": "asdasd",
-    "price": "2323",
-    "code": "017",
     "stock": 5,
-    "category": "nuecesysemillas",
-    "thumbnail": "aasd",
+    "category": "frutossecos",
+    "thumbnail": "",
     "status": true
   }
 ]
