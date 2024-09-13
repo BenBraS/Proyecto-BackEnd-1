@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
-// Definir el esquema para los carritos
-const carritoSchema = new mongoose.Schema({
+// Definir el esquema para los carritos (ahora llamado Carts)
+const cartSchema = new mongoose.Schema({
   products: [
     {
       productId: {
@@ -18,7 +18,7 @@ const carritoSchema = new mongoose.Schema({
   ]
 });
 
-// Crear el modelo de Mongoose
-const Carrito = mongoose.model('Carrito', carritoSchema);
+// Crear el modelo de Mongoose con el nombre 'Carts' y la colección 'Carts'
+const Cart = mongoose.model('Carts', cartSchema, 'carts');
 
-export default Carrito;
+export default Cart;

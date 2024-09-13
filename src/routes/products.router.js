@@ -8,7 +8,7 @@ const productManager = new ProductManager();
 
 // APIs
 // GET
-router.get('/home', async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const limit = req.query.limit ? parseInt(req.query.limit) : undefined;
         const products = await productManager.getAllProducts(limit);
