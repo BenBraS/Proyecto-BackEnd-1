@@ -1,102 +1,84 @@
-import fs from 'fs/promises'
-import path from 'path'
+// managers/ProductManager.js
+import Product from '../models/products.js'; // Asegúrate de ajustar la ruta según tu estructura
 
+export default class ProductManager {
+    constructor() {}
 
-const productsFilePath = path.resolve('data', 'productos.json')
-
-
-export default class ProductManager{
-    constructor(){
-        this.products = []
-        this.init()
-    }
-
-    async init(){
+    async getAllProducts(limit) {
         try {
-            const data = await fs.readFile(productsFilePath, 'utf-8')
-            this.products = JSON.parse(data)
+            const products = await Product.find().limit(limit || 0);
+            return products;
         } catch (error) {
-            this.products= []
+            console.error('Error al obtener productos:', error);
+            throw error;
         }
     }
 
-//Métodos
-
-saveToFile(){
-    fs.writeFile(productsFilePath, JSON.stringify(this.products, null, 2));
-}
-
-getAllProducts(limit){
-    if(limit){
-        return this.products.slice(0, limit)
-    }
-    return this.products
-}
-
-getProductById(id){
-    return this.products.find(product => product.id === id)
-}
-
-addProduct(product) {
-        // Verifica si el producto ya existe por su código
-        const existingProduct = this.products.find(p => p.code === product.code);
-        if (existingProduct) {
-            // Si existe, suma el stock
-            existingProduct.stock += product.stock;
-            this.saveToFile();
-            return existingProduct;
-        }
-
-        // Si no existe, crea un nuevo producto
-        const newProduct = {
-            id: this.products.length ? this.products[this.products.length - 1].id + 1 : 1,
-            ...product,
-            status: true
-        };
-        this.products.push(newProduct);
-        this.saveToFile();
-        return newProduct;
-    }
-
-async updateProduct(id, updatedFields) {
-    const productIndex = this.products.findIndex(product => product.id === id);
-    if (productIndex === -1) return null;
-
-    // Verificar si 'stock' está presente en los campos actualizados
-    if ('stock' in updatedFields) {
-        let currentStock = this.products[productIndex].stock;
-        let adjustment = Number(updatedFields.stock); // Convertir a número
-
-        // Calcular el nuevo stock
-        let newStock = currentStock + adjustment;
-        console.log(`Current stock: ${currentStock}, Adjustment: ${adjustment}, New stock: ${newStock}`);
-
-        // Si el stock resultante es negativo, ajustarlo a 0 y establecer el estado en false
-        if (newStock < 0) {
-            updatedFields.stock = 0;
-            updatedFields.status = false;
-        } else {
-            updatedFields.stock = newStock;
-            updatedFields.status = newStock > 0;
+    async getProductById(id) {
+        try {
+            const product = await Product.findById(id);
+            return product || null;
+        } catch (error) {
+            console.error('Error al obtener el producto:', error);
+            throw error;
         }
     }
 
-    const updatedProduct = {
-        ...this.products[productIndex],
-        ...updatedFields,
-        id: this.products[productIndex].id // Asegurar que el ID no se actualice
-    };
+    async addProduct(productData) {
+        try {
+            // Verifica si el producto ya existe por su código
+            const existingProduct = await Product.findOne({ code: productData.code });
+            if (existingProduct) {
+                // Si existe, suma el stock
+                existingProduct.stock += productData.stock;
+                await existingProduct.save();
+                return existingProduct;
+            }
 
-    this.products[productIndex] = updatedProduct;
-    await this.saveToFile(); // Guardar los cambios en el archivo
-    return updatedProduct;
-}
-deleteProduct(id){
-    const productIndex = this.products.findIndex(product => product.id === id)
- if(productIndex === -1) return null
+            // Si no existe, crea un nuevo producto
+            const newProduct = new Product(productData);
+            await newProduct.save();
+            return newProduct;
+        } catch (error) {
+            console.error('Error al agregar producto:', error);
+            throw error;
+        }
+    }
 
- const deletedProduct = this.products.splice(productIndex, 1)
-  this.saveToFile()
- return deletedProduct[0]
-}
+    async updateProduct(id, updatedFields) {
+        try {
+            const product = await Product.findById(id);
+            if (!product) return null;
+
+            // Actualiza los campos correspondientes
+            if ('stock' in updatedFields) {
+                let currentStock = product.stock;
+                let adjustment = Number(updatedFields.stock);
+
+                // Calcular el nuevo stock
+                let newStock = currentStock + adjustment;
+
+                // Si el stock resultante es negativo, ajustarlo a 0 y establecer el estado en false
+                product.stock = newStock < 0 ? 0 : newStock;
+                product.status = product.stock > 0;
+            }
+
+            Object.assign(product, updatedFields); // Asigna los campos actualizados al producto
+            await product.save();
+            return product;
+        } catch (error) {
+            console.error('Error al actualizar el producto:', error);
+            throw error;
+        }
+    }
+
+    async deleteProduct(id) {
+        try {
+            const deletedProduct = await Product.findByIdAndDelete(id);
+            return deletedProduct || null;
+        } catch (error) {
+            console.error('Error al eliminar el producto:', error);
+            throw error;
+        }
+    }
 }

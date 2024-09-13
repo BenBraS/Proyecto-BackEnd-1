@@ -5,14 +5,9 @@ const router = Router();
 const p = new ProductManager()
 
 router.get('/', async (req, res) => {
-    try {
-       
         const products = await p.getAllProducts();
         res.render('home', { products });
-    } catch (error) {
-        console.error('Error al obtener productos:', error);
-        res.status(500).send('Error al obtener productos');
-    }
+    
 });
 
 // Ruta para la vista "realTimeProducts"

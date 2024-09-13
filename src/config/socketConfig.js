@@ -25,9 +25,9 @@ export default function socketConfig(httpServer) {
     });
 
     // Evento de Producto Eliminado
-    socket.on('productDeleted', async (productId) => {
+    socket.on('productDeleted', async (Id) => {
       try {
-        await productManager.deleteProduct(productId);
+        await productManager.deleteProduct(Id);
         const updatedProducts = await productManager.getAllProducts();
         socketServer.emit('updateProducts', { products: updatedProducts, message: 'Producto eliminado exitosamente' });
       } catch (error) {

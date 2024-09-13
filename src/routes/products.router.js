@@ -1,18 +1,18 @@
 import { Router } from 'express';
 import ProductManager from '../services/ProductManager.js';
 import socketServer from '../config/socketConfig.js';
-
+import expressConfig from '../config/expressConfig.js';
 
 const router = Router();
 const productManager = new ProductManager();
 
 // APIs
 // GET
-router.get('/', async (req, res) => {
+router.get('/home', async (req, res) => {
     try {
         const limit = req.query.limit ? parseInt(req.query.limit) : undefined;
         const products = await productManager.getAllProducts(limit);
-        res.json(products);
+        res.render('home', { products }); // Pasa `products` a la vista
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Error al obtener productos' });
@@ -21,8 +21,8 @@ router.get('/', async (req, res) => {
 
 router.get('/:pid', async (req, res) => {
     try {
-        const productId = parseInt(req.params.pid);
-        const product = await productManager.getProductById(productId);
+        const productId = req.params.pid;
+        const product = await productManager.getProductById(req.params.pid);
         if (product) {
             res.json(product);
         } else {
@@ -68,7 +68,7 @@ router.post('/', async (req, res) => {
 // PUT
 router.put('/:pid', async (req, res) => {
     try {
-        const productId = parseInt(req.params.pid);
+        const productId = req.params.pid;
         const updatedFields = req.body;
 
         // Validar stock si está presente
@@ -100,5 +100,19 @@ router.put('/:pid', async (req, res) => {
         res.status(500).json({ error: 'Error al actualizar producto' });
     }
 });
-
+// DELETE
+router.delete('/:pid', async (req, res) => {
+    try {
+        const productId = req.params.pid;
+        const deletedProduct = await productManager.deleteProduct(productId);
+        // Emitir evento de producto agregado
+        const products = await productManager.getAllProducts();
+        socketServer.emit('updateProducts', { products, message: 'Producto Eliminado Exitosamente' }); // Eliminar el producto usando Mongoose
+        res.status(201).json("succesfull")
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al eliminar producto' });
+    }
+});
 export default router;
+
