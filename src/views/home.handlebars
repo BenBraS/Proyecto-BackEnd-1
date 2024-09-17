@@ -4,118 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-    <script>
-        // Función para obtener el ID del carrito desde el almacenamiento local
-        function getCartId() {
-            return localStorage.getItem('cartId');
-        }
-
-        // Función para guardar el ID del carrito en el almacenamiento local
-        function setCartId(cartId) {
-            localStorage.setItem('cartId', cartId);
-        }
-            // Función para mostrar los productos del carrito
-        async function showCartProducts() {
-            const cartId = getCartId();
-            if (!cartId) {
-                alert('No hay un carrito seleccionado.');
-                return;
-            }
-
-            try {
-                const response = await fetch(`/api/carts/${cartId}/products`);
-                const products = await response.json();
-                
-                const cartTableBody = document.getElementById('cart-products');
-                cartTableBody.innerHTML = ''; // Limpiar el contenido anterior
-
-                products.forEach(product => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${product.productId.title}</td>
-                        <td>${product.productId.description}</td>
-                        <td>${product.productId.code}</td>
-                        <td>${product.productId.price}</td>
-                        <td>${product.quantity}</td>
-                    `;
-                    cartTableBody.appendChild(row);
-                });
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        }
-
-        // Inicializar carrito al cargar la página
-        document.addEventListener('DOMContentLoaded', () => {
-            // Verificar si ya hay un carrito en el almacenamiento local
-            if (!getCartId()) {
-                createCart(); // Crear un carrito si no existe
-            }
-            showCartProducts(); // Mostrar los productos del carrito
-        });
-
-        // Función para actualizar la cantidad del producto en el carrito
-        async function updateProductQuantity(productId, change) {
-            const cartId = getCartId();
-            if (!cartId) {
-                alert('No hay un carrito seleccionado.');
-                return;
-            }
-
-            try {
-                const response = await fetch(`/api/carts/${cartId}/products/${productId}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ quantity: change }),
-                });
-
-                const result = await response.json();
-                console.log(result); // Aquí puedes manejar la respuesta, por ejemplo, actualizar la UI
-                if (result.message === 'Carrito vacío y eliminado') {
-                    // Limpiar el almacenamiento local si el carrito se ha eliminado
-                    localStorage.removeItem('cartId');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        }
-
-        // Función para crear un nuevo carrito y guardar su ID
-        async function createCart() {
-            try {
-                const response = await fetch('/api/carts/', {
-                    method: 'POST',
-                });
-
-                const result = await response.json();
-                setCartId(result._id); // Guardar el ID del nuevo carrito
-                console.log('Carrito creado:', result);
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        }
-
-        // Inicializar carrito al cargar la página
-        document.addEventListener('DOMContentLoaded', () => {
-            // Verificar si ya hay un carrito en el almacenamiento local
-            if (!getCartId()) {
-                createCart(); // Crear un carrito si no existe
-            }
-        });
-    </script>
+   <script src="/js/cart.js" defer></script> 
 </head>
 <body>
     <div>
         <h1>Lista de Productos</h1>
+     <!-- Formulario para filtrar por categoría -->
+    <form method="GET" action="/">
+        <label for="category">Filtrar por categoría:</label>
+        <select name="category" id="category">
+            <option value="">Todas</option>
+            <option value="nuecesysemillas" {{#if (eq category 'nuecesysemillas')}}selected{{/if}}>Nueces y Semillas</option>
+            <option value="frutossecos" {{#if (eq category 'frutossecos')}}selected{{/if}}>Frutos Secos</option>
+            <option value="legumbressecas" {{#if (eq category 'legumbressecas')}}selected{{/if}}>Legumbres Secas</option>
+            <option value="frutossecostostados" {{#if (eq category 'frutossecostostados')}}selected{{/if}}>Frutos Secos Tostados</option>
+            <option value="mixfrutossecos" {{#if (eq category 'mixfrutossecos')}}selected{{/if}}>Mix Frutos Secos</option>
+        </select>
+        <button type="submit">Filtrar</button>
+    </form>
         <table>
             <thead>
                 <tr>
                     <th>Título</th>
                     <th>Descripción</th>
                     <th>Código</th>
-                    <th>Precio</th>
+                    <!-- Enlaces de orden con todos los parámetros y filtros -->
+                    <th>
+                    <a href="?category={{category}}&page={{result.page}}&limit={{result.limit}}&sort=price&order=asc">
+        Precio (Ascendente)
+                    </a> | 
+                    <a href="?category={{category}}&page={{result.page}}&limit={{result.limit}}&sort=price&order=desc">
+        Precio (Descendente)
+                    </a>
+                    </th>
+
                     <th>Stock</th>
                     <th>Categoría</th>
                     <th>Thumbnail</th>
@@ -124,7 +46,7 @@
                 </tr>
             </thead>
             <tbody>
-                {{#each products}}
+                {{#each result.docs}}
                     <tr>
                         <td>{{this.title}}</td>
                         <td>{{this.description}}</td>
@@ -142,6 +64,23 @@
                 {{/each}}
             </tbody>
         </table>
+  <!-- Paginación -->
+<div>
+    {{#if result.hasPrevPage}}
+        <a href="?category={{category}}&sort={{sort}}&order={{order}}&page={{result.prevPage}}&limit={{result.limit}}">
+            Anterior
+        </a>
+    {{/if}}
+
+    <span>Página {{result.page}} de {{result.totalPages}}</span>
+
+    {{#if result.hasNextPage}}
+        <a href="?category={{category}}&sort={{sort}}&order={{order}}&page={{result.nextPage}}&limit={{result.limit}}">
+            Siguiente
+        </a>
+    {{/if}}
+</div>
+
          <h2>Productos en el Carrito</h2>
         <table>
             <thead>
@@ -158,5 +97,6 @@
             </tbody>
         </table>
     </div>
+
 </body>
 </html>

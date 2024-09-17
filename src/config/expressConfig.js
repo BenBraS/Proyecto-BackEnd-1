@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import handlebars from 'express-handlebars';
 import productsRouter from '../routes/products.router.js';
 import views from '../routes/views.js';
@@ -6,9 +7,12 @@ import express from 'express'
 import mongoose from 'mongoose';
 
 
+
+const uriDB = process.env.MONGODB_URI;
+
 export default function expressConfig(app, __dirname) {
    // Conexión a Mongo Atlas
-  const uriDB = 'mongodb+srv://Bebrasa:aC9hJF298Cs139jV@clustercoderbackend.8y1ru.mongodb.net/ProyectoBackEnd-I'
+ 
   
   const connectMongoDb = async() =>{
     try {
@@ -24,15 +28,21 @@ export default function expressConfig(app, __dirname) {
   connectMongoDb();
 
   // CONFIGURACIONES HANDLEBARS
-  app.engine('handlebars', handlebars.engine({
-    runtimeOptions: {
+// Definir el helper eq
+const hbs = handlebars.create({
+  runtimeOptions: {
       allowProtoPropertiesByDefault: true,
       allowProtoMethodsByDefault: true
-    }
-  }));
-  app.set('views', __dirname + '/views/');
-  app.set('view engine', 'handlebars');
+  },
+  helpers: {
+      eq: (value1, value2) => value1 === value2 
+  }
+});
 
+// Configuración de Handlebars
+app.engine('handlebars', hbs.engine);
+app.set('views', __dirname + '/views/');
+app.set('view engine', 'handlebars');
   // Middlewares
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));

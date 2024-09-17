@@ -1,101 +1,174 @@
+/* Estilos globales */
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
+    margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    box-sizing: border-box;
 }
 
+/* Contenedor principal */
+div {
+    padding: 20px;
+}
+
+/* Estilos para el encabezado */
 h1 {
     text-align: center;
-    color: #333;
+    font-size: 2rem;
+    margin-bottom: 20px;
 }
 
-.container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+/* Estilos del formulario */
+form {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
 }
 
+form label {
+    margin-right: 10px;
+}
+
+form select {
+    padding: 5px;
+    font-size: 1rem;
+}
+
+form button {
+    padding: 5px 10px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+/* Estilos de la tabla */
 table {
     width: 100%;
     border-collapse: collapse;
-    /* Espacio debajo de la tabla */
-    margin-bottom: 20px; 
+    margin-bottom: 20px;
 }
 
-table, th, td {
+thead th {
+    background-color: #f4f4f4;
+    padding: 10px;
+    text-align: left;
+    font-weight: bold;
+}
+
+tbody td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* Estilos para la paginación */
+div.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+div.pagination a {
+    margin: 0 5px;
+    padding: 5px 10px;
+    text-decoration: none;
+    color: #007bff;
     border: 1px solid #ddd;
 }
 
-th, td {
-    padding: 12px;
-    text-align: left;
-    /* Alineación vertical */
-    vertical-align: middle; 
+div.pagination a:hover {
+    background-color: #007bff;
+    color: white;
 }
 
-th {
-    background-color: #f2f2f2;
-    color: #555;
-    font-weight: bold;
-}
-/* Color de fondo alternado para filas */
-tbody tr:nth-child(odd) {
-    background-color: #f9f9f9; 
-}
-/* Color de fondo al pasar el cursor */
-tbody tr:hover {
-    background-color: #e0e0e0; 
-  
-}
-/* Hacer que el formulario ocupe todo el ancho disponible */
-form table {
-    margin: 0;
-    width: 100%; 
+span {
+    padding: 5px 10px;
 }
 
-form td {
-    padding: 10px;
+/* Estilos para la miniatura */
+img {
+    max-width: 80px;
+    max-height: 80px;
 }
 
-form input, form select {
-    /* Ajustar el ancho para incluir el padding */
-    width: calc(100% - 16px); 
-    padding: 10px;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-    /* Bordes redondeados en inputs y selects */
-    border-radius: 4px; 
-}
-
+/* Estilos para los botones de acciones */
 button {
-    padding: 10px 20px;
-    /* Fondo azul */
-    background-color: #007BFF; 
+    padding: 5px 10px;
+    margin: 2px;
+    background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
-    margin-right: 10px; /* Espaciado entre botones */
-    margin-bottom: 10px; /* Espacio debajo de los botones */
-    transition: background-color 0.3s, transform 0.2s; /* Transición suave para el cambio de color y escalado */
 }
 
 button:hover {
-    background-color: #0056b3; /* Azul más oscuro al pasar el cursor */
-    transform: scale(1.05); /* Escalado ligero al pasar el cursor */
+    background-color: #0056b3;
 }
 
-button:active {
-    background-color: #004494; /* Azul aún más oscuro al hacer clic */
-    transform: scale(1); /* Volver al tamaño original al hacer clic */
+/* Responsividad */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    form {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    form select, form button {
+        width: 100%;
+        margin: 5px 0;
+    }
+
+    table {
+        font-size: 0.9rem;
+    }
+
+    thead {
+        display: none;
+    }
+
+    tbody tr {
+        display: block;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+    }
+
+    tbody td {
+        display: block;
+        text-align: right;
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    tbody td:before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    button {
+        width: 100%;
+        margin: 5px 0;
+    }
 }
 
-.action-buttons {
-    display: flex;
-    gap: 10px; /* Espacio entre botones */
+/* Ajustes para móviles */
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.2rem;
+    }
+
+    table {
+        font-size: 0.8rem;
+    }
 }

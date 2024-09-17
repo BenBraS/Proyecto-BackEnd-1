@@ -8,16 +8,6 @@ const productManager = new ProductManager();
 
 // APIs
 // GET
-router.get('/', async (req, res) => {
-    try {
-        const limit = req.query.limit ? parseInt(req.query.limit) : undefined;
-        const products = await productManager.getAllProducts(limit);
-        res.render('home', { products }); // Pasa `products` a la vista
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error al obtener productos' });
-    }
-});
 
 router.get('/:pid', async (req, res) => {
     try {

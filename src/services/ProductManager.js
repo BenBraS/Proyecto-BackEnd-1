@@ -1,4 +1,3 @@
-// managers/ProductManager.js
 import Product from '../models/products.js'; // Asegúrate de ajustar la ruta según tu estructura
 
 export default class ProductManager {
@@ -81,4 +80,22 @@ export default class ProductManager {
             throw error;
         }
     }
+    async getPaginatedProducts(page = 1, limit = 10, category = '', sort = 'title', order = 1) {
+        try {
+            const options = {
+                page: page,
+                limit: limit,
+                lean: true, // Para resultados planos
+                sort: { [sort]: order } // Ordenar por campo dinámico
+            };
+    
+            const filter = category ? { category: category } : {}; // Aplicar filtro de categoría si existe
+            const result = await Product.paginate(filter, options); // Usar el filtro en la consulta
+            return result;
+        } catch (error) {
+            throw new Error('Error al obtener productos paginados');
+        }
+    }
+    
+
 }
